@@ -6,10 +6,10 @@ var { buildSchema } = require("graphql");
 var schema = buildSchema(`
 input CourseInput {
     id: Int
-    title: String
-    author: String
-    desccription: String
-    topic: String
+    title: String!,
+    author: String,
+    desccription: String,
+    topic: String,
     url: String
 }
 type Query {
@@ -62,7 +62,7 @@ var coursesData = [
 var getCourse = function (args) {
   var id = args.id;
   return coursesData.filter((course) => {
-    return course.id == id;
+    return course.id === id;
   })[0];
 };
 
@@ -81,7 +81,7 @@ var getCoursesString = function (args) {
   var chaineTitle = new RegExp(args.chaineTitle, "g");
 
   coursesData.forEach((course) => {
-    if (course.title.match(expr) !== null) {
+    if (course.title.match(chaineTitle) !== null) {
       resultat.push(course);
     }
   });
@@ -92,11 +92,11 @@ var getCoursesString = function (args) {
 var createCourse = function (args) {
   const courseNew = {
     id: coursesData.length + 1,
-    title: args.course.title,
-    author: args.course.author,
-    description: args.course.description,
-    topic: args.course.topic,
-    url: args.course.url,
+    title: args.input.title,
+    author: args.input.author,
+    description: args.input.description,
+    topic: args.input.topic,
+    url: args.input.url,
   };
   coursesData.push(courseNew);
   return coursesData;
